@@ -4,12 +4,16 @@
 
     $app = new Silex\Application();
 
-    $app->get("/", function() {
-      return "This is the index page!";
+    $app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/../views'
+));
+
+    $app->get("/", function() use ($app) {
+      return $app['twig']->render('index.html.twig');
     });
 
-    $app->get("/hello", function() {
-      $newMeal = new Meal("My Table");
+    $app->post("/hello", function() {
+      $newMeal = new Meal($_POST['name']);
       return "Hello friend! You're dining at the " . $newMeal->getTableName() . " table.";
     });
 
